@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Previewer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #embed {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    #sidePanel {
+      position: absolute;
+      top: 0;
+      left: -340px; /* Modified position */
+      width: 300px; /* Modified width */
+      height: 100%;
+      background-color: #f2f2f2;
+      padding: 20px;
+      transition: left 0.3s ease-in-out;
+    }
+
+    #sidePanel.show {
+      left: 0;
+    }
+
+    #urlInput {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    #urlDropdown {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    #sidePanel button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <embed id="embed" src="">
+
+  <div id="sidePanel">
+    <input type="text" id="urlInput" placeholder="Enter a URL">
+    <button id="saveButton">Save</button>
+    <select id="urlDropdown">
+      <option value="">Presets</option>
+      <option value="https://example.com">Example Website 1</option>
+      <option value="https://example.org">Example Website 2</option>
+    </select>
+    <button id="loadButton">Load</button>
+    <button id="deleteButton">🗑️</button>
+  </div>
+
+  <script>
+    document.addEventListener('keydown', function(event) {
+      const sidePanel = document.getElementById('sidePanel');
+      if (event.ctrlKey && event.shiftKey && event.key === 'M') {
+        event.preventDefault();
+        sidePanel.classList.toggle('show');
+      }
+    });
+
+    document.getElementById('urlInput').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        const url = event.target.value;
+        document.getElementById('embed').src = url;
+      }
+    });
+
+    document.getElementById('saveButton').addEventListener('click', function() {
+      const url = document.getElementById('urlInput').value;
+      if (url.trim() !== '') {
+        const savedUrls = JSON.parse(localStorage.getItem('savedUrls')) || [];
+        if (!savedUrls.includes(url)) {
+          savedUrls.push(url);
+          localStorage.setItem('savedUrls', JSON.stringify(savedUrls));
+          populateDropdown();
+        }
+      }
+    });
+
+    document.getElementById('loadButton').addEventListener('click', function() {
+      const dropdown = document.getElementById('urlDropdown');
+      const selectedUrl = dropdown.value;
+      if (selectedUrl !== '') {
+        document.getElementById('urlInput').value = selectedUrl;
+        document.getElementById('embed').src = selectedUrl;
+      }
+    });
+
+    document.getElementById('deleteButton').addEventListener('click', function() {
+      const dropdown = document.getElementById('urlDropdown');
+      const selectedOption = dropdown.options[dropdown.selectedIndex];
+      const selectedUrl = selectedOption.value;
+      const savedUrls = JSON.parse(localStorage.getItem('savedUrls')) || [];
+      if (selectedUrl !== '' && savedUrls.includes(selectedUrl)) {
+        const newSavedUrls = savedUrls.filter(url => url !== selectedUrl);
+        localStorage.setItem('savedUrls', JSON.stringify(newSavedUrls));
+        selectedOption.remove();
+        dropdown.selectedIndex = 0;
+      }
+    });
+
+    // Populate the dropdown menu with saved URLs
+    function populateDropdown() {
+      const dropdown = document.getElementById('urlDropdown');
+      dropdown.innerHTML = '<option value="">Presets</option>';
+      const savedUrls = JSON.parse(localStorage.getItem('savedUrls')) || [];
+      savedUrls.forEach(function(url) {
+        const option = document.createElement('option');
+        option.value = url;
+        option.text = url;
+        dropdown.appendChild(option);
+      });
+    }
+
+    // Populate the dropdown on page load
+    populateDropdown();
+  </script>
+</body>
+</html>
