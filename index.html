@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Website Previewer</title>
   <style>
-    html, body {
+       html, body {
       margin: 0;
       padding: 0;
       height: 100%;
@@ -21,10 +21,10 @@
     #sidePanel {
       position: absolute;
       top: 0;
-      left: -340px; /* Modified position */
-      width: 300px; /* Modified width */
+      left: -360px;
+      width: 320px;
       height: 100%;
-      background-color: #f2f2f2;
+      background-color: #2f3c6e;
       padding: 20px;
       transition: left 0.3s ease-in-out;
     }
@@ -33,20 +33,50 @@
       left: 0;
     }
 
-    #urlInput {
-      width: 100%;
-      margin-bottom: 10px;
+
+    #urlInput:focus {
+      outline: none;
     }
 
-    #urlDropdown {
+    #urlInput, #urlDropdown, #saveButton, #loadButton, #deleteButton {
+      display: inline-block;
       width: 100%;
-      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #1c233b;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
     }
 
+    #urlInput:hover, #urlDropdown:hover ,#saveButton:hover, #loadButton:hover, #deleteButton:hover {
+      background-color: #0f8b8d;
+    }
+      #urlInput, #urlDropdown {
+          display:block;
+          margin-bottom: 10px
+      }
+      #urlInput {
+          width:93.55%
+      }
     #sidePanel button {
       display: block;
       width: 100%;
       margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #e63946;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    #sidePanel button:hover {
+      background-color: #a60f17;
     }
   </style>
 </head>
@@ -62,7 +92,7 @@
       <option value="https://example.org">Example Website 2</option>
     </select>
     <button id="loadButton">Load</button>
-    <button id="deleteButton">🗑️</button>
+    <button id="deleteButton">Delete</button>
   </div>
 
   <script>
